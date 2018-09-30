@@ -62,8 +62,8 @@ public class Transaction1 {
                 nextOID, D_ID, W_ID, C_ID, num_items, all_local
         );
 
-        int total_amout = 0;
-
+        int total_amount = 0;
+        // End of last meeting
         
 
         for (int i = 0; i < num_items; i++) {
