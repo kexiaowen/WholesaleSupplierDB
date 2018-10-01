@@ -3,11 +3,11 @@ import com.datastax.driver.core.Session;
 
 public class Transaction2 {
 
-    private String C_W_ID, C_D_ID, C_ID;
+    private int C_W_ID, C_D_ID, C_ID;
     private Session session;
     private int payment;
 
-    public Transaction2(Session session, String C_W_ID, String C_D_ID, String C_ID,
+    public Transaction2(Session session, int C_W_ID, int C_D_ID, int C_ID,
                         int payment) {
         this.session = session;
         this.C_D_ID = C_D_ID;

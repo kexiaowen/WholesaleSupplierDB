@@ -87,7 +87,7 @@ create table if not exists OrderLine(
     OL_I_ID int,
     OL_DELIVERY_D timestamp,
     OL_AMOUNT decimal,
-    OL_SUPPLIY_W_ID int,
+    OL_SUPPLY_W_ID int,
     OL_QUANTITY decimal,
     OL_DIST_INFO text,
     primary key(OL_W_ID, OL_D_ID, OL_O_ID, OL_NUMBER)
