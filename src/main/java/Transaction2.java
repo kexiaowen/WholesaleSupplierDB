@@ -29,11 +29,11 @@ public class Transaction2 {
                 C_W_ID, C_D_ID, C_ID
         );
         Row row1 = session.execute(q1).one();
-//        Customer’s identifier (C W ID, C D ID, C ID), name (C FIRST, C MIDDLE, C LAST), address
-//                (C STREET 1, C STREET 2, C CITY, C STATE, C ZIP), C PHONE, C SINCE, C CREDIT,
-//                C CREDIT LIM, C DISCOUNT, C BALANCE
+//        Customer’s identifier (C_W_ID, C_D_ID, C_ID), name (C_FIRST, C_MIDDLE, C_LAST), address
+//                (C_STREET 1, C_STREET 2, C_CITY, C_STATE, C_ZIP), C_PHONE, C_SINCE, C_CREDIT,
+//                C_CREDIT LIM, C_DISCOUNT, C_BALANCE
         System.out.printf("Id: %s, %s, %s\nName: %s %s %s\nAddress: %s, %s, %s, %s, %s\n"
-                + "Phone: %s\nSince: %s\nCredit: %s\nCredit limit: %lf\nDiscount: %lf\nBalance: %lf\n",
+                + "Phone: %s\nSince: %s\nCredit: %s\nCredit limit: %f\nDiscount: %f\nBalance: %f\n",
                 row1.getString("C_W_ID"), row1.getString("C_D_ID"), row1.getString("C_ID"),
                 row1.getString("C_FIRST"), row1.getString("C_MIDDLE"), row1.getString("C_LAST"),
                 row1.getString("C_STREET_1"), row1.getString("C_STREET_2"), row1.getString("C_CITY"),
@@ -46,7 +46,7 @@ public class Transaction2 {
                 "Select * from Warehouse_T2_Print WHERE W_ID = %d;", C_W_ID
         );
         Row row2 = session.execute(q2).one();
-        //Warehouse’s address (W STREET 1, W STREET 2, W CITY, W STATE, W ZIP)
+        //Warehouse’s address (W_STREET 1, W_STREET 2, W_CITY, W_STATE, W_ZIP)
         System.out.printf("Warehouse address: %s, %s, %s, %s, %s\n",
                 row2.getString("W_STREET_1"), row2.getString("W_STREET_2"),
                 row2.getString("W_CITY"), row2.getString("W_STATE"), row2.getString("W_ZIP"));
@@ -55,7 +55,7 @@ public class Transaction2 {
                 "Select * from District_T2_Print D_W_ID = %d and D_ID = %d;", C_W_ID, C_D_ID
         );
         Row row3 = session.execute(q3).one();
-        //District’s address (D STREET 1, D STREET 2, D CITY, D STATE, D ZIP)
+        //District’s address (D_STREET_1, D_STREET_2, D_CITY, D_STATE, D_ZIP)
         System.out.printf("District address: %s, %s, %s, %s, %s\n",
                 row3.getString("D_STREET_1"), row3.getString("D_STREET_2"),
                 row3.getString("D_CITY"), row3.getString("D_STATE"), row3.getString("D_ZIP"));
@@ -65,7 +65,7 @@ public class Transaction2 {
 
     private void updateCustomer() {
         String q1 = String.format(
-                "Select C_BALANCE, C_YTD_PAYMENT, C_PAYMENT_CNT from Customer_T2_update "
+                "Select * from Customer_T2_Update "
                 + "Where C_W_ID = %d AND C_D_ID = %d AND C_ID = %d;",
                 C_W_ID, C_D_ID, C_ID
         );
@@ -82,7 +82,7 @@ public class Transaction2 {
 
     private void update_D_YTD() {
         String q1 = String.format(
-                "SELECT D_YTD FROM District_T2 WHERE D_W_ID = %d and D_ID = %d;", C_W_ID, C_D_ID
+                "SELECT D_YTD FROM District_T2_Update WHERE D_W_ID = %d and D_ID = %d;", C_W_ID, C_D_ID
         );
         Row row1 = session.execute(q1).one();
         int ytd = row1.getInt("D_YTD") + payment;
@@ -95,7 +95,7 @@ public class Transaction2 {
 
     private void update_W_YTD() {
         String q1 = String.format(
-                "SELECT W_YTD FROM Warehouse_T2 WHERE W_ID = %d;", C_W_ID
+                "SELECT W_YTD FROM Warehouse_T2_Update WHERE W_ID = %d;", C_W_ID
         );
         Row row1 = session.execute(q1).one();
         int curYTD = Integer.valueOf(row1.getString("W_YTD"));
