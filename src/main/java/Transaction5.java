@@ -17,7 +17,7 @@ public class Transaction5 {
         this.D_ID = D_ID;
         this.threshold = threshold;
         this.L = L;
-        items = new TreeSet<>();
+        items = new TreeSet<Integer>();
     }
 
     public void execute() {

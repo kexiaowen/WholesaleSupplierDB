@@ -30,15 +30,6 @@ public class Transaction1 {
         stockQuantity = new int[num_items];
     }
 
-    public Transaction1(int W_ID, int D_ID) {
-        this.W_ID = W_ID;
-        this.D_ID = D_ID;
-        itemName = new String[num_items];
-        itemPrice = new double[num_items];
-        stockQuantity = new int[num_items];
-
-    }
-
     private int retrieveAndUpdateOID() {
         String q1 = String.format(
                 "SELECT D_NEXT_O_ID FROM District WHERE D_W_ID = %d AND D_ID = %d;",
@@ -165,7 +156,4 @@ public class Transaction1 {
         printResult(nextOID, rawAmount);
     }
 
-    public static void main(String[] args) {
-        new Transaction1(123, 456).execute();
-    }
 }
