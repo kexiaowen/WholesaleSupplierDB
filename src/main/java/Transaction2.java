@@ -37,19 +37,19 @@ public class Transaction2 {
 //        Customer’s identifier (C_W_ID, C_D_ID, C_ID), name (C_FIRST, C_MIDDLE, C_LAST), address
 //                (C_STREET 1, C_STREET 2, C_CITY, C_STATE, C_ZIP), C_PHONE, C_SINCE, C_CREDIT,
 //                C_CREDIT LIM, C_DISCOUNT, C_BALANCE
-        System.out.printf("Id: %s, %s, %s\nName: %s %s %s\nAddress: %s, %s, %s, %s, %s\n"
+        System.out.printf("Id: %d, %d, %d\nName: %s %s %s\nAddress: %s, %s, %s, %s, %s\n"
                 + "Phone: %s\nSince: %s\nCredit: %s\nCredit limit: %f\nDiscount: %f\nBalance: %f\n",
                 C_W_ID, C_D_ID, C_ID,
                 row1.getString("C_FIRST"), row1.getString("C_MIDDLE"), row1.getString("C_LAST"),
                 row1.getString("C_STREET_1"), row1.getString("C_STREET_2"), row1.getString("C_CITY"),
                 row1.getString("C_STATE"), row1.getString("C_ZIP"),
                 row1.getString("C_PHONE"), row1.getString("C_SINCE"), row1.getString("C_CREDIT"),
-                row1.getDecimal("C_CREDIT_LIM"), row1.getDecimal("C_DISCOUNT"),
-                row1.getDecimal("C_Balance"));
+                row1.getDouble("C_CREDIT_LIM"), row1.getDouble("C_DISCOUNT"),
+                row1.getDouble("C_Balance"));
 
         String q2 = String.format(
                 "Select W_STREET_1, W_STREET_2, " +
-                        "W_CITY, W_STATE, W_ZIP from Warehouse_T2_Print WHERE W_ID = %d;", C_W_ID
+                        "W_CITY, W_STATE, W_ZIP from Warehouse WHERE W_ID = %d;", C_W_ID
         );
         Row row2 = session.execute(q2).one();
         //Warehouse’s address (W_STREET 1, W_STREET 2, W_CITY, W_STATE, W_ZIP)
@@ -85,6 +85,7 @@ public class Transaction2 {
                 + "Where C_W_ID = %d AND C_D_ID = %d AND C_ID = %d;",
                 balance, ytd, cnt, C_W_ID, C_D_ID, C_ID
         );
+        session.execute(q2);
     }
 
     private void update_D_YTD() {
@@ -102,7 +103,7 @@ public class Transaction2 {
 
     private void update_W_YTD() {
         String q1 = String.format(
-                "SELECT W_YTD FROM Warehouse_T2_Update WHERE W_ID = %d;", C_W_ID
+                "SELECT W_YTD FROM Warehouse WHERE W_ID = %d;", C_W_ID
         );
         Row row1 = session.execute(q1).one();
         int curYTD = Integer.valueOf(row1.getString("W_YTD"));
