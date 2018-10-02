@@ -28,7 +28,7 @@ public class Transaction4 {
                 row1.getDouble("C_BALANCE"));
 
         String q2 = String.format(
-                "SELECT O_ID, O_ENTRY_D, O_CARRIER_ID FROM Order_T4" +
+                "SELECT O_ID, O_ENTRY_D, O_CARRIER_ID FROM Order_With_CID" +
                         "WHERE O_W_ID = %d AND O_D_ID = %d AND O_C_ID = %d " +
                         "ORDER BY O_ID DESC LIMIT 1;",
                 C_W_ID, C_D_ID, C_ID

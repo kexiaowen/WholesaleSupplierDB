@@ -30,7 +30,7 @@ public class Transaction2 {
                         "C_STATE, C_ZIP, C_PHONE," +
                         "C_SINCE, C_CREDIT, C_CREDIT_LIM," +
                         "C_DISCOUNT, C_Balance " +
-                        "FROM Customer_T2_Print Where C_W_ID = %d AND C_D_ID = %d AND C_ID = %d;",
+                        "FROM Customer Where C_W_ID = %d AND C_D_ID = %d AND C_ID = %d;",
                 C_W_ID, C_D_ID, C_ID
         );
         Row row7 = session.execute(q7).one();
@@ -59,7 +59,7 @@ public class Transaction2 {
 
         String q9 = String.format(
                 "Select D_STREET_1, D_STREET_2, D_CITY, D_STATE, " +
-                        "D_ZIP from District_T2_Print D_W_ID = %d and D_ID = %d;", C_W_ID, C_D_ID
+                        "D_ZIP from District D_W_ID = %d and D_ID = %d;", C_W_ID, C_D_ID
         );
         Row row9 = session.execute(q9).one();
         //District’s address (D_STREET_1, D_STREET_2, D_CITY, D_STATE, D_ZIP)
@@ -72,7 +72,7 @@ public class Transaction2 {
 
     private void updateCustomer() {
         String q5 = String.format(
-                "Select C_BALANCE, C_YTD_PAYMENT, C_PAYMENT_CNT from Customer_T2_Update "
+                "Select C_BALANCE, C_YTD_PAYMENT, C_PAYMENT_CNT from Customer"
                 + "Where C_W_ID = %d AND C_D_ID = %d AND C_ID = %d;",
                 C_W_ID, C_D_ID, C_ID
         );
@@ -90,7 +90,7 @@ public class Transaction2 {
 
     private void update_D_YTD() {
         String q3 = String.format(
-                "SELECT D_YTD FROM District_T2_Update WHERE D_W_ID = %d and D_ID = %d;", C_W_ID, C_D_ID
+                "SELECT D_YTD FROM District WHERE D_W_ID = %d and D_ID = %d;", C_W_ID, C_D_ID
         );
         Row row3 = session.execute(q3).one();
         int ytd = row3.getInt("D_YTD") + payment;

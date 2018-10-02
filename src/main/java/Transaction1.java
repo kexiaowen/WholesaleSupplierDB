@@ -2,8 +2,6 @@ import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
 
-import jnr.ffi.annotations.In;
-
 public class Transaction1 {
     private Session session;
     private int W_ID;
@@ -32,18 +30,9 @@ public class Transaction1 {
         stockQuantity = new int[num_items];
     }
 
-    public Transaction1(int W_ID, int D_ID) {
-        this.W_ID = W_ID;
-        this.D_ID = D_ID;
-        itemName = new String[num_items];
-        itemPrice = new double[num_items];
-        stockQuantity = new int[num_items];
-
-    }
-
     private int retrieveAndUpdateOID() {
         String q1 = String.format(
-                "SELECT D_NEXT_O_ID FROM District_T1 WHERE D_W_ID = %d AND D_ID = %d;",
+                "SELECT D_NEXT_O_ID FROM District WHERE D_W_ID = %d AND D_ID = %d;",
                 W_ID, D_ID);
 
         Row row1 = session.execute(q1).one();
@@ -81,7 +70,7 @@ public class Transaction1 {
 
         for (int i = 0; i < num_items; i++) {
             String q4 = String.format(
-                    "SELECT * FROM Stock_T1 WHERE S_W_ID = %d AND S_I_ID = %d;",
+                    "SELECT * FROM Stock WHERE S_W_ID = %d AND S_I_ID = %d;",
                     supplier_warehouse[i], item_number[i]);
             Row row4 = session.execute(q4).one();
             int adjustedQuantity = row4.getInt("S_QUANTITY") - quantity[i];
@@ -103,7 +92,7 @@ public class Transaction1 {
             );
             session.execute(q5);
 
-            String q6 = String.format("SELECT I_PRICE, I_NAME FROM Item_T1 Where I_ID = %d", item_number[i]);
+            String q6 = String.format("SELECT I_PRICE, I_NAME FROM Item Where I_ID = %d;", item_number[i]);
             Row row6 = session.execute(q6).one();
             itemPrice[i] = row6.getDouble("I_PRICE");
             itemName[i] = row6.getString("I_NAME");
@@ -113,7 +102,7 @@ public class Transaction1 {
             String q7 = String.format(
                     "INSERT INTO OrderLine (OL_W_ID, OL_D_ID, OL_O_ID, OL_NUMBER, OL_I_ID, OL_DELIVERY_D,"
                             + " OL_AMOUNT, OL_SUPPLY_W_ID, OL_QUANTITY, OL_DIST_INFO)"
-                            + "VALUES (%d, %d, %d, %d, %d, %d, %f, %d, %d, %s)",
+                            + "VALUES (%d, %d, %d, %d, %d, %d, %f, %d, %d, %s);",
                     W_ID, D_ID, O_ID, i, item_number[i], -1,
                     itemAmount, supplier_warehouse[i], quantity[i], distInfo
             );
@@ -167,7 +156,4 @@ public class Transaction1 {
         printResult(nextOID, rawAmount);
     }
 
-    public static void main(String[] args) {
-        new Transaction1(123, 456).execute();
-    }
 }
