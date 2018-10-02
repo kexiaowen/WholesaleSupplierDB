@@ -36,12 +36,12 @@ public class Transaction1 {
                 W_ID, D_ID);
 
         Row row1 = session.execute(q1).one();
-        int nextOID = Integer.valueOf(row1.getString("D_NEXT_O_ID"));
+        int nextOID = Integer.valueOf(row1.getInt("D_NEXT_O_ID"));
 
         // sout
         //System.out.println("nextOID = " + nextOID);
         String q2 = String.format(
-                "UPDATE District SET D_NEXT_ID = %d WHERE D_W_ID = %d AND D_ID = %d;",
+                "UPDATE District SET D_NEXT_O_ID = %d WHERE D_W_ID = %d AND D_ID = %d;",
                 nextOID + 1, W_ID, D_ID
         );
         session.execute(q2);
@@ -73,11 +73,12 @@ public class Transaction1 {
                     "SELECT * FROM Stock WHERE S_W_ID = %d AND S_I_ID = %d;",
                     supplier_warehouse[i], item_number[i]);
             Row row4 = session.execute(q4).one();
-            int adjustedQuantity = row4.getInt("S_QUANTITY") - quantity[i];
-            int ytd = row4.getInt("S_YTD") + quantity[i];
+            int adjustedQuantity = row4.getDecimal("S_QUANTITY").intValue() - quantity[i];
+            int ytd = row4.getDecimal("S_YTD").intValue() + quantity[i];
             int cnt = row4.getInt("S_ORDER_CNT") + 1;
             int remoteCnt = row4.getInt("S_REMOTE_CNT");
-            String distInfo = row4.getString("S_DIST_" + D_ID);
+            String distNum = String.format("S_DIST_%02d", D_ID);
+            String distInfo = row4.getString(distNum);
             if (supplier_warehouse[i] != W_ID) {
                 remoteCnt++;
             }
@@ -86,7 +87,7 @@ public class Transaction1 {
             }
             stockQuantity[i] = adjustedQuantity;
             String q5 = String.format(
-                    "UPDATE Stock SET S_QUANTITY = %d, S_YTD = %d, S_ORDER_CNT = %d, S_REMOTE_CNT = %d"
+                    "UPDATE Stock SET S_QUANTITY = %d, S_YTD = %d, S_ORDER_CNT = %d, S_REMOTE_CNT = %d "
                             + "WHERE S_W_ID = %d AND S_I_ID = %d;",
                     adjustedQuantity, ytd, cnt, remoteCnt, supplier_warehouse[i], item_number[i]
             );
@@ -94,7 +95,7 @@ public class Transaction1 {
 
             String q6 = String.format("SELECT I_PRICE, I_NAME FROM Item Where I_ID = %d;", item_number[i]);
             Row row6 = session.execute(q6).one();
-            itemPrice[i] = row6.getDouble("I_PRICE");
+            itemPrice[i] = row6.getDecimal("I_PRICE").doubleValue();
             itemName[i] = row6.getString("I_NAME");
             double itemAmount = quantity[i] * itemPrice[i];
             total_amount += itemAmount;
@@ -102,8 +103,8 @@ public class Transaction1 {
             String q7 = String.format(
                     "INSERT INTO OrderLine (OL_W_ID, OL_D_ID, OL_O_ID, OL_NUMBER, OL_I_ID, OL_DELIVERY_D,"
                             + " OL_AMOUNT, OL_SUPPLY_W_ID, OL_QUANTITY, OL_DIST_INFO)"
-                            + "VALUES (%d, %d, %d, %d, %d, %d, %f, %d, %d, %s);",
-                    W_ID, D_ID, O_ID, i, item_number[i], -1,
+                            + " VALUES (%d, %d, %d, %d, %d, %d, %f, %d, %d, '%s');",
+                    W_ID, D_ID, O_ID, i, item_number[i], 1,
                     itemAmount, supplier_warehouse[i], quantity[i], distInfo
             );
             session.execute(q7);
@@ -116,20 +117,20 @@ public class Transaction1 {
         // #1
         String q8 = String.format(
                 "SELECT C_LAST, C_CREDIT, C_DISCOUNT FROM CUSTOMER"
-                        + "WHERE C_W_ID = %d AND C_D_ID = %d AND = C_ID = %d;",
+                        + " WHERE C_W_ID = %d AND C_D_ID = %d AND C_ID = %d;",
                 W_ID, D_ID, C_ID
         );
         Row customerRow = session.execute(q8).one();
-        double discount = customerRow.getDouble("C_DISCOUNT");
+        double discount = customerRow.getDecimal("C_DISCOUNT").doubleValue();
         System.out.printf("Customer identifier: %d, %d, %d, lastname: %s, credit: %s, discount: %f\n",
                 W_ID, D_ID, C_ID, customerRow.getString("C_LAST"), customerRow.getString("C_CREDIT"),
                 discount);
 
         // #2
         String q9 = String.format("SELECT W_TAX FROM Warehouse WHERE W_ID = %d;", W_ID);
-        double wTax = session.execute(q9).one().getDouble("W_TAX");
-        String q10 = String.format("SELECT D_TAX FORM District WHERE D_W_ID = %d AND D_ID = %d;", W_ID, D_ID);
-        double dTax = session.execute(q10).one().getDouble("D_TAX");
+        double wTax = session.execute(q9).one().getDecimal("W_TAX").doubleValue();
+        String q10 = String.format("SELECT D_TAX FROM District WHERE D_W_ID = %d AND D_ID = %d;", W_ID, D_ID);
+        double dTax = session.execute(q10).one().getDecimal("D_TAX").doubleValue();
         System.out.println("W_Tax: " + wTax + " D_Tax: " + dTax);
 
         // TODO: print entry date
