@@ -14,7 +14,7 @@ public class ClientDriver {
         ClientDriver driver = new ClientDriver();
         String ip = "127.0.0.1";
         driver.connect(ip);
-
+        driver.readInput();
         //Transaction1 t1 = new Transaction1(session, );
         //t1.execute();
     }

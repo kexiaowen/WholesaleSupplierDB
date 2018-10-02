@@ -31,7 +31,7 @@ create table if not exists District (
     D_TAX decimal,
     D_YTD decimal,
     D_NEXT_O_ID int,
-    primary key(D_W_ID, D_ID)
+    primary key((D_W_ID, D_ID))
 );
 
 CREATE TABLE if not exists Customer(
@@ -56,7 +56,7 @@ CREATE TABLE if not exists Customer(
 	C_PAYMENT_CNT int,
 	C_DELIVERY_CNT int,
 	C_DATA text,
-	PRIMARY KEY (C_W_ID, C_D_ID, C_ID)
+	PRIMARY KEY ((C_W_ID, C_D_ID, C_ID))
 );
 
 create table if not exists Orders (
@@ -68,7 +68,7 @@ create table if not exists Orders (
 	O_OL_CNT decimal,
 	O_ALL_LOCAL decimal,
 	O_ENTRY_D timestamp,
-	primary key (O_W_ID, O_D_ID, O_ID)
+	primary key ((O_W_ID, O_D_ID), O_ID)
 );
 
 create table if not exists Item(
@@ -90,7 +90,7 @@ create table if not exists OrderLine(
     OL_SUPPLY_W_ID int,
     OL_QUANTITY decimal,
     OL_DIST_INFO text,
-    primary key(OL_W_ID, OL_D_ID, OL_O_ID, OL_NUMBER)
+    primary key((OL_W_ID, OL_D_ID, OL_O_ID), OL_NUMBER)
 );
 
 create table if not exists Stock(
@@ -111,5 +111,5 @@ create table if not exists Stock(
     S_DIST_09 text,
     S_DIST_10 text,
     S_DATA text,
-    primary key(S_W_ID, S_I_ID)
+    primary key((S_W_ID, S_I_ID))
 );
