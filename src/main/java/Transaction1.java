@@ -92,7 +92,7 @@ public class Transaction1 {
             );
             session.execute(q5);
 
-            String q6 = String.format("SELECT I_PRICE, I_NAME FROM Item Where I_ID = %d", item_number[i]);
+            String q6 = String.format("SELECT I_PRICE, I_NAME FROM Item Where I_ID = %d;", item_number[i]);
             Row row6 = session.execute(q6).one();
             itemPrice[i] = row6.getDouble("I_PRICE");
             itemName[i] = row6.getString("I_NAME");
@@ -102,7 +102,7 @@ public class Transaction1 {
             String q7 = String.format(
                     "INSERT INTO OrderLine (OL_W_ID, OL_D_ID, OL_O_ID, OL_NUMBER, OL_I_ID, OL_DELIVERY_D,"
                             + " OL_AMOUNT, OL_SUPPLY_W_ID, OL_QUANTITY, OL_DIST_INFO)"
-                            + "VALUES (%d, %d, %d, %d, %d, %d, %f, %d, %d, %s)",
+                            + "VALUES (%d, %d, %d, %d, %d, %d, %f, %d, %d, %s);",
                     W_ID, D_ID, O_ID, i, item_number[i], -1,
                     itemAmount, supplier_warehouse[i], quantity[i], distInfo
             );
