@@ -25,7 +25,12 @@ public class Transaction2 {
 
     private void printResult() {
         String q1 = String.format(
-                "Select * from Customer_T2_Print Where C_W_ID = %d AND C_D_ID = %d AND C_ID = %d;",
+                "Select C_FIRST, C_MIDDLE, C_LAST," +
+                        "C_STREET_1, C_STREET_2, C_CITY," +
+                        "C_STATE, C_ZIP, C_PHONE," +
+                        "C_SINCE, C_CREDIT, C_CREDIT_LIM," +
+                        "C_DISCOUNT, C_Balance " +
+                        "FROM Customer_T2_Print Where C_W_ID = %d AND C_D_ID = %d AND C_ID = %d;",
                 C_W_ID, C_D_ID, C_ID
         );
         Row row1 = session.execute(q1).one();
@@ -34,7 +39,7 @@ public class Transaction2 {
 //                C_CREDIT LIM, C_DISCOUNT, C_BALANCE
         System.out.printf("Id: %s, %s, %s\nName: %s %s %s\nAddress: %s, %s, %s, %s, %s\n"
                 + "Phone: %s\nSince: %s\nCredit: %s\nCredit limit: %f\nDiscount: %f\nBalance: %f\n",
-                row1.getString("C_W_ID"), row1.getString("C_D_ID"), row1.getString("C_ID"),
+                C_W_ID, C_D_ID, C_ID,
                 row1.getString("C_FIRST"), row1.getString("C_MIDDLE"), row1.getString("C_LAST"),
                 row1.getString("C_STREET_1"), row1.getString("C_STREET_2"), row1.getString("C_CITY"),
                 row1.getString("C_STATE"), row1.getString("C_ZIP"),
@@ -43,7 +48,8 @@ public class Transaction2 {
                 row1.getDecimal("C_Balance"));
 
         String q2 = String.format(
-                "Select * from Warehouse_T2_Print WHERE W_ID = %d;", C_W_ID
+                "Select W_STREET_1, W_STREET_2, " +
+                        "W_CITY, W_STATE, W_ZIP from Warehouse_T2_Print WHERE W_ID = %d;", C_W_ID
         );
         Row row2 = session.execute(q2).one();
         //Warehouse’s address (W_STREET 1, W_STREET 2, W_CITY, W_STATE, W_ZIP)
@@ -52,7 +58,8 @@ public class Transaction2 {
                 row2.getString("W_CITY"), row2.getString("W_STATE"), row2.getString("W_ZIP"));
 
         String q3 = String.format(
-                "Select * from District_T2_Print D_W_ID = %d and D_ID = %d;", C_W_ID, C_D_ID
+                "Select D_STREET_1, D_STREET_2, D_CITY, D_STATE, " +
+                        "D_ZIP from District_T2_Print D_W_ID = %d and D_ID = %d;", C_W_ID, C_D_ID
         );
         Row row3 = session.execute(q3).one();
         //District’s address (D_STREET_1, D_STREET_2, D_CITY, D_STATE, D_ZIP)
@@ -65,7 +72,7 @@ public class Transaction2 {
 
     private void updateCustomer() {
         String q1 = String.format(
-                "Select * from Customer_T2_Update "
+                "Select C_BALANCE, C_YTD_PAYMENT, C_PAYMENT_CNT from Customer_T2_Update "
                 + "Where C_W_ID = %d AND C_D_ID = %d AND C_ID = %d;",
                 C_W_ID, C_D_ID, C_ID
         );

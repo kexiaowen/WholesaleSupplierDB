@@ -103,7 +103,7 @@ public class Transaction1 {
             );
             session.execute(q2);
 
-            String q3 = String.format("SELECT * FROM Item_T1 Where I_ID = %d", item_number[i]);
+            String q3 = String.format("SELECT I_PRICE, I_NAME FROM Item_T1 Where I_ID = %d", item_number[i]);
             Row row3 = session.execute(q3).one();
             itemPrice[i] = row3.getDouble("I_PRICE");
             itemName[i] = row3.getString("I_NAME");
