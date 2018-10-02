@@ -6,7 +6,7 @@ create keyspace WholesaleSupplierDB with replication = {
 
 use WholesaleSupplierDB;
 
-create table if not exists Warehouse (
+create table Warehouse (
     W_ID int primary key,
     W_NAME text,
     W_STREET_1 text,
@@ -19,7 +19,7 @@ create table if not exists Warehouse (
 );
 
 
-create table if not exists District (
+create table District (
     D_W_ID int,
     D_ID int,
     D_NAME text,
@@ -34,7 +34,7 @@ create table if not exists District (
     primary key((D_W_ID, D_ID))
 );
 
-CREATE TABLE if not exists Customer(
+CREATE TABLE Customer(
 	C_W_ID int,
 	C_D_ID int,
 	C_ID int,
@@ -59,7 +59,7 @@ CREATE TABLE if not exists Customer(
 	PRIMARY KEY ((C_W_ID, C_D_ID, C_ID))
 );
 
-create table if not exists Orders (
+create table Orders (
 	O_W_ID int,
 	O_D_ID int,
 	O_ID int,
@@ -71,7 +71,7 @@ create table if not exists Orders (
 	primary key ((O_W_ID, O_D_ID), O_ID)
 );
 
-create table if not exists Item(
+create table Item(
     I_ID int primary key,
     I_NAME text,
     I_PRICE decimal,
@@ -79,7 +79,7 @@ create table if not exists Item(
     I_DATA text
 );
 
-create table if not exists OrderLine(
+create table OrderLine(
     OL_W_ID int,
     OL_D_ID int,
     OL_O_ID int,
@@ -93,7 +93,7 @@ create table if not exists OrderLine(
     primary key((OL_W_ID, OL_D_ID, OL_O_ID), OL_NUMBER)
 );
 
-create table if not exists Stock(
+create table Stock(
     S_W_ID int,
     S_I_ID int,
     S_QUANTITY decimal,

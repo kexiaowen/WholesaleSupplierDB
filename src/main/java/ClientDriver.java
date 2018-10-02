@@ -1,7 +1,5 @@
 import com.datastax.driver.core.Cluster;
-import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Session;
-import jnr.ffi.annotations.In;
 
 import java.util.Scanner;
 
@@ -15,8 +13,6 @@ public class ClientDriver {
         String ip = "127.0.0.1";
         driver.connect(ip);
         driver.readInput();
-        //Transaction1 t1 = new Transaction1(session, );
-        //t1.execute();
     }
 
     private void readInput() {
@@ -69,7 +65,5 @@ public class ClientDriver {
 
         session = cluster.connect("WholesaleSupplierDB");
     }
-
-    // ResultSet rset = session.execute("select * from myTable where id = 1");
-
+    
 }
