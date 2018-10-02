@@ -13,6 +13,9 @@ public class Transaction1 {
     private int[] item_number;
     private int[] supplier_warehouse;
     private int[] quantity;
+    private String[] itemName;
+    private double[] itemPrice;
+    private int[] stockQuantity;
 
     public Transaction1(Session session, int W_ID, int D_ID, int C_ID, int num_items,
                         int[] item_number, int[] supplier_warehouse, int[] quantity) {
@@ -24,11 +27,18 @@ public class Transaction1 {
         this.item_number = item_number;
         this.supplier_warehouse = supplier_warehouse;
         this.quantity = quantity;
+        itemName = new String[num_items];
+        itemPrice = new double[num_items];
+        stockQuantity = new int[num_items];
     }
 
     public Transaction1(int W_ID, int D_ID) {
         this.W_ID = W_ID;
         this.D_ID = D_ID;
+        itemName = new String[num_items];
+        itemPrice = new double[num_items];
+        stockQuantity = new int[num_items];
+
     }
 
     private int retrieveAndUpdateOID() {
@@ -66,8 +76,8 @@ public class Transaction1 {
         session.execute(q1);
     }
 
-    private int insertOrderLinesAndComputePrice(int O_ID) {
-        int total_amount = 0;
+    private double insertOrderLinesAndComputePrice(int O_ID) {
+        double total_amount = 0;
 
         for (int i = 0; i < num_items; i++) {
             String q1 = String.format(
@@ -85,6 +95,7 @@ public class Transaction1 {
             if(adjustedQuantity < 10) {
                 adjustedQuantity += 100;
             }
+            stockQuantity[i] = adjustedQuantity;
             String q2 = String.format(
                     "UPDATE Stock SET S_QUANTITY = %d, S_YTD = %d, S_ORDER_CNT = %d, S_REMOTE_CNT = %d"
                             + "WHERE S_W_ID = %d AND S_I_ID = %d;",
@@ -93,14 +104,16 @@ public class Transaction1 {
             session.execute(q2);
 
             String q3 = String.format("SELECT * FROM Item_T1 Where I_ID = %d", item_number[i]);
-            int price = session.execute(q3).one().getInt("I_PRICE");
-            int itemAmount = quantity[i] * price;
+            Row row3 = session.execute(q3).one();
+            itemPrice[i] = row3.getDouble("I_PRICE");
+            itemName[i] = row3.getString("I_NAME");
+            double itemAmount = quantity[i] * itemPrice[i];
             total_amount += itemAmount;
 
             String q4 = String.format(
                     "INSERT INTO OrderLine (OL_W_ID, OL_D_ID, OL_O_ID, OL_NUMBER, OL_I_ID, OL_DELIVERY_D,"
                             + " OL_AMOUNT, OL_SUPPLY_W_ID, OL_QUANTITY, OL_DIST_INFO)"
-                            + "VALUES (%d, %d, %d, %d, %d, %d, %d, %d, %d, %s)",
+                            + "VALUES (%d, %d, %d, %d, %d, %d, %f, %d, %d, %s)",
                     W_ID, D_ID, O_ID, i, item_number[i], -1,
                     itemAmount, supplier_warehouse[i], quantity[i], distInfo
             );
@@ -110,16 +123,48 @@ public class Transaction1 {
         return total_amount;
     }
 
-    private void printResult() {
+    private void printResult(int OID, double rawAmount) {
+        // #1
+        String q1 = String.format(
+                "SELECT C_LAST, C_CREDIT, C_DISCOUNT FROM CUSTOMER"
+                        + "WHERE C_W_ID = %d AND C_D_ID = %d AND = C_ID = %d;",
+                W_ID, D_ID, C_ID
+        );
+        Row customerRow = session.execute(q1).one();
+        double discount = customerRow.getDouble("C_DISCOUNT");
+        System.out.printf("Customer identifier: %d, %d, %d, lastname: %s, credit: %s, discount: %f\n",
+                W_ID, D_ID, C_ID, customerRow.getString("C_LAST"), customerRow.getString("C_CREDIT"),
+                discount);
 
+        // #2
+        String q2 = String.format("SELECT W_TAX FROM Warehouse WHERE W_ID = %d;", W_ID);
+        double wTax = session.execute(q2).one().getDouble("W_TAX");
+        String q3 = String.format("SELECT D_TAX FORM District WHERE D_W_ID = %d AND D_ID = %d;", W_ID, D_ID);
+        double dTax = session.execute(q3).one().getDouble("D_TAX");
+        System.out.println("W_Tax: " + wTax + " D_Tax: " + dTax);
+
+        // TODO: print entry date
+        // #3
+        System.out.println("O_ID: " + OID);
+
+        // #4
+        double totalAmount = rawAmount * (1 + wTax + dTax) * (1 - discount);
+        System.out.println("Num_items: " + num_items + " Total_amount: " + totalAmount);
+
+        // #5
+        for (int i = 0; i < num_items; i++) {
+            System.out.printf("Item number: %d, Item name: %s, Supplier warehouse: %d, Quantity: %d" +
+                    "OL amount: %f, S_quantity: %d\n", item_number[i], itemName[i], supplier_warehouse[i],
+                    quantity[i], itemPrice[i] * quantity[i], stockQuantity[i]);
+        }
     }
 
     public void execute() {
         int nextOID = retrieveAndUpdateOID();
         insertNewOrder(nextOID);
         // End of last meeting
-        int rawAmount = insertOrderLinesAndComputePrice(nextOID);
-        printResult();
+        double rawAmount = insertOrderLinesAndComputePrice(nextOID);
+        printResult(nextOID, rawAmount);
     }
 
     public static void main(String[] args) {
