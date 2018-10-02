@@ -5,10 +5,10 @@ public class Transaction2 {
 
     private int C_W_ID, C_D_ID, C_ID;
     private Session session;
-    private int payment;
+    private double payment;
 
     public Transaction2(Session session, int C_W_ID, int C_D_ID, int C_ID,
-                        int payment) {
+                        double payment) {
         this.session = session;
         this.C_D_ID = C_D_ID;
         this.C_ID = C_ID;
@@ -25,10 +25,10 @@ public class Transaction2 {
 
     private void printResult() {
         String q7 = String.format(
-                "Select C_FIRST, C_MIDDLE, C_LAST," +
-                        "C_STREET_1, C_STREET_2, C_CITY," +
-                        "C_STATE, C_ZIP, C_PHONE," +
-                        "C_SINCE, C_CREDIT, C_CREDIT_LIM," +
+                "Select C_FIRST, C_MIDDLE, C_LAST, " +
+                        "C_STREET_1, C_STREET_2, C_CITY, " +
+                        "C_STATE, C_ZIP, C_PHONE, " +
+                        "C_SINCE, C_CREDIT, C_CREDIT_LIM, " +
                         "C_DISCOUNT, C_Balance " +
                         "FROM Customer Where C_W_ID = %d AND C_D_ID = %d AND C_ID = %d;",
                 C_W_ID, C_D_ID, C_ID
@@ -77,11 +77,11 @@ public class Transaction2 {
                 C_W_ID, C_D_ID, C_ID
         );
         Row row5 = session.execute(q5).one();
-        int balance = row5.getInt("C_BALANCE") - payment;
-        int ytd = row5.getInt("C_YTD_PAYMENT") + payment;
+        double balance = row5.getDecimal("C_BALANCE").doubleValue() - payment;
+        double ytd = row5.getFloat("C_YTD_PAYMENT") + payment;
         int cnt = row5.getInt("C_PAYMENT_CNT") + 1;
         String q6 = String.format(
-                "Update Customer set C_BALANCE = %d, C_PAYMENT_CNT = %d, C_ID = %d "
+                "Update Customer set C_BALANCE = %f, C_PAYMENT_CNT = %f, C_ID = %d "
                 + "Where C_W_ID = %d AND C_D_ID = %d AND C_ID = %d;",
                 balance, ytd, cnt, C_W_ID, C_D_ID, C_ID
         );
@@ -93,9 +93,9 @@ public class Transaction2 {
                 "SELECT D_YTD FROM District WHERE D_W_ID = %d and D_ID = %d;", C_W_ID, C_D_ID
         );
         Row row3 = session.execute(q3).one();
-        int ytd = row3.getInt("D_YTD") + payment;
+        double ytd = row3.getDecimal("D_YTD").doubleValue() + payment;
         String q4 = String.format(
-                "UPDATE District SET D_YTD = %d WHERE D_W_ID = %d and D_ID = %d;",
+                "UPDATE District SET D_YTD = %f WHERE D_W_ID = %d and D_ID = %d;",
                 ytd, C_W_ID, C_D_ID
         );
         session.execute(q4);
@@ -106,9 +106,9 @@ public class Transaction2 {
                 "SELECT W_YTD FROM Warehouse WHERE W_ID = %d;", C_W_ID
         );
         Row row1 = session.execute(q1).one();
-        int curYTD = Integer.valueOf(row1.getString("W_YTD"));
+        double ytd = row1.getDecimal("W_YTD").doubleValue();
         String q2 = String.format(
-                "UPDATE Warehouse SET W_YTD = %d WHERE W_ID = %d;", curYTD + payment, C_W_ID
+                "UPDATE Warehouse SET W_YTD = %f WHERE W_ID = %d;", ytd + payment, C_W_ID
         );
         session.execute(q2);
     }

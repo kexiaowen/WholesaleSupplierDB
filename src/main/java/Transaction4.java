@@ -28,7 +28,7 @@ public class Transaction4 {
                 row1.getDouble("C_BALANCE"));
 
         String q2 = String.format(
-                "SELECT O_ID, O_ENTRY_D, O_CARRIER_ID FROM Order_With_CID" +
+                "SELECT O_ID, O_ENTRY_D, O_CARRIER_ID FROM Order_With_CID " +
                         "WHERE O_W_ID = %d AND O_D_ID = %d AND O_C_ID = %d " +
                         "ORDER BY O_ID DESC LIMIT 1;",
                 C_W_ID, C_D_ID, C_ID
@@ -46,10 +46,11 @@ public class Transaction4 {
         Iterator<Row> iterator3 = session.execute(q3).iterator();
         while (iterator3.hasNext()) {
             Row row = iterator3.next();
-            System.out.printf("OL_I_ID: %d, OL_SUPPLY_W_ID: %d, OL_QUANTITY: %d," +
+            System.out.printf("OL_I_ID: %d, OL_SUPPLY_W_ID: %d, OL_QUANTITY: %f," +
                     " OL_AMOUNT: %f, OL_DELIVERY_D: %s\n",
                     row.getInt("OL_I_ID"), row.getInt("OL_SUPPLY_W_ID"),
-                    row.getInt("OL_QUANTITY"), row.getDouble("OL_AMOUNT"),
+                    row.getDecimal("OL_QUANTITY").doubleValue(),
+                    row.getDecimal("OL_AMOUNT").doubleValue(),
                     row.getTimestamp("OL_DELIVERY_D").toString());
         }
 
