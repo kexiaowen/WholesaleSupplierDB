@@ -1,9 +1,14 @@
 import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Iterator;
 
 public class Transaction3 {
+
+    Logger logger = LoggerFactory.getLogger(Transaction3.class);
+
     private Session session;
     private int W_ID;
     private int CARRIER_ID;
