@@ -12,7 +12,7 @@ public class ClientDriver {
 
     public static void main(String[] args) {
         ClientDriver driver = new ClientDriver();
-        String ip = "192.168.48.219";
+        String ip = "127.0.0.1";
         driver.connect(ip);
 
         //Transaction1 t1 = new Transaction1(session, );
@@ -39,9 +39,9 @@ public class ClientDriver {
                         item_number[i] = Integer.valueOf(row[0]);
                         supplier_warehouse[i] = Integer.valueOf(row[1]);
                         quantity[i] = Integer.valueOf(row[2]);
-                        new Transaction1(session, WID, DID, CID, numItem,
-                                item_number, supplier_warehouse, quantity).execute();
                     }
+                    new Transaction1(session, WID, DID, CID, numItem,
+                            item_number, supplier_warehouse, quantity).execute();
                     break;
                 case 'P':
                     break;
