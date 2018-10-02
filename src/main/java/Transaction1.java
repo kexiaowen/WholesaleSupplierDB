@@ -2,8 +2,6 @@ import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
 
-import jnr.ffi.annotations.In;
-
 public class Transaction1 {
     private Session session;
     private int W_ID;
@@ -43,7 +41,7 @@ public class Transaction1 {
 
     private int retrieveAndUpdateOID() {
         String q1 = String.format(
-                "SELECT D_NEXT_O_ID FROM District_T1 WHERE D_W_ID = %d AND D_ID = %d;",
+                "SELECT D_NEXT_O_ID FROM District WHERE D_W_ID = %d AND D_ID = %d;",
                 W_ID, D_ID);
 
         Row row1 = session.execute(q1).one();
@@ -81,7 +79,7 @@ public class Transaction1 {
 
         for (int i = 0; i < num_items; i++) {
             String q4 = String.format(
-                    "SELECT * FROM Stock_T1 WHERE S_W_ID = %d AND S_I_ID = %d;",
+                    "SELECT * FROM Stock WHERE S_W_ID = %d AND S_I_ID = %d;",
                     supplier_warehouse[i], item_number[i]);
             Row row4 = session.execute(q4).one();
             int adjustedQuantity = row4.getInt("S_QUANTITY") - quantity[i];
@@ -103,7 +101,7 @@ public class Transaction1 {
             );
             session.execute(q5);
 
-            String q6 = String.format("SELECT I_PRICE, I_NAME FROM Item_T1 Where I_ID = %d", item_number[i]);
+            String q6 = String.format("SELECT I_PRICE, I_NAME FROM Item Where I_ID = %d", item_number[i]);
             Row row6 = session.execute(q6).one();
             itemPrice[i] = row6.getDouble("I_PRICE");
             itemName[i] = row6.getString("I_NAME");

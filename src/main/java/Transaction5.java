@@ -43,6 +43,6 @@ public class Transaction5 {
         }
 
         int result = 0;
-        
+
     }
 }
