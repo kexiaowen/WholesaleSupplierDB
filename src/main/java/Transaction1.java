@@ -36,7 +36,7 @@ public class Transaction1 {
                 W_ID, D_ID);
 
         Row row1 = session.execute(q1).one();
-        int nextOID = Integer.valueOf(row1.getInt("D_NEXT_O_ID"));
+        int nextOID = row1.getInt("D_NEXT_O_ID");
 
         // sout
         //System.out.println("nextOID = " + nextOID);
