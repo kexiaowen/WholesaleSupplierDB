@@ -16,7 +16,7 @@ public class Transaction4 {
         this.C_ID = C_ID;
     }
 
-    public void execution() {
+    public void execute() {
         String q1 = String.format(
                 "SELECT C_FIRST, C_LAST, C_MIDDLE, C_BALANCE FROM Customer WHERE " +
                         "C_W_ID = %d AND C_D_ID = %d AND C_ID = %d;",

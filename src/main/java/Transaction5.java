@@ -8,10 +8,11 @@ import java.util.TreeSet;
 public class Transaction5 {
 
     private Session session;
-    private int W_ID, D_ID, threshold, L;
+    private int W_ID, D_ID, L;
+    private double threshold;
     private TreeSet<Integer> items;
 
-    public Transaction5(Session session, int W_ID, int D_ID, int threshold, int L) {
+    public Transaction5(Session session, int W_ID, int D_ID, double threshold, int L) {
         this.session = session;
         this.W_ID = W_ID;
         this.D_ID = D_ID;
