@@ -22,7 +22,7 @@ public class Transaction5 {
 
     public void execute() {
         String q1 = String.format(
-                "SELECT O_ID FROM Order_T5 WHERE O_W_ID = %d AND O_D_ID = %d " +
+                "SELECT O_ID FROM Orders WHERE O_W_ID = %d AND O_D_ID = %d " +
                         "ORDER BY O_ID DESC LIMIT %d;",
                 W_ID, D_ID, L
         );
@@ -42,7 +42,28 @@ public class Transaction5 {
             }
         }
 
-        int result = 0;
+        Iterator<Integer> itemIterator = items.iterator();
+        String partial_q3 = String.format(
+                "SELECT S_QUANTITY FROM Stock WHERE S_W_ID = %d AND S_I_ID IN (", W_ID
+        );
+        StringBuilder q3Builder = new StringBuilder(partial_q3);
+        while (itemIterator.hasNext()) {
+            int itemId = itemIterator.next();
+            q3Builder.append(itemId).append(", ");
+        }
+        q3Builder.deleteCharAt(q3Builder.length() - 2);
+        q3Builder.append(");");
+        String q3 = q3Builder.toString();
+        System.out.println(q3);
 
+        Iterator<Row> iterator3 = session.execute(q3).iterator();
+        int result = 0;
+        while (iterator3.hasNext()) {
+            double quantity = iterator3.next().getDecimal("S_QUANTITY").doubleValue();
+            if (quantity < threshold) {
+                result++;
+            }
+        }
+        System.out.println("Number of items below threshold: " + result);
     }
 }
