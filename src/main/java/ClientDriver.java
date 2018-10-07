@@ -12,12 +12,17 @@ public class ClientDriver {
         ClientDriver driver = new ClientDriver();
         String ip = "127.0.0.1";
         driver.connect(ip);
-        driver.readInput();
+        long startTime = System.currentTimeMillis();
+        int totalXact = driver.readInput();
+        long endingTime = System.currentTimeMillis();
+        double totalTime = (endingTime - startTime) / 1000.0;
     }
 
-    private void readInput() {
+    private int readInput() {
         Scanner sc = new Scanner(System.in);
+        int totalXact = 0;
         while (sc.hasNext()) {
+            totalXact++;
             String[] firstRow = sc.next().split(",");
             char type = firstRow[0].charAt(0);
             switch (type) {
@@ -69,6 +74,7 @@ public class ClientDriver {
                     break;
             }
         }
+        return totalXact;
     }
 
     private void connect(String ip) {
