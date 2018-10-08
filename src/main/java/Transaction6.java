@@ -96,7 +96,7 @@ public class Transaction6 {
                     count++;
                 }
             }
-            System.out.printf("Item name: %s, percent of orders that contain the popular item: %f\n", popular_item_names.get(i), count*1.0/L);
+            System.out.printf("Item name: %s, percent of orders that contain the popular item: %f%%\n", popular_item_names.get(i), count*100.0/L);
         }
     }
 
