@@ -34,9 +34,6 @@ public class Transaction2 {
                 C_W_ID, C_D_ID, C_ID
         );
         Row row7 = session.execute(q7).one();
-//        Customer’s identifier (C_W_ID, C_D_ID, C_ID), name (C_FIRST, C_MIDDLE, C_LAST), address
-//                (C_STREET 1, C_STREET 2, C_CITY, C_STATE, C_ZIP), C_PHONE, C_SINCE, C_CREDIT,
-//                C_CREDIT LIM, C_DISCOUNT, C_BALANCE
         System.out.printf("Id: %d, %d, %d\nName: %s %s %s\nAddress: %s, %s, %s, %s, %s\n"
                 + "Phone: %s\nSince: %s\nCredit: %s\nCredit limit: %f\nDiscount: %f\nBalance: %f\n",
                 C_W_ID, C_D_ID, C_ID,
@@ -52,7 +49,6 @@ public class Transaction2 {
                         "W_CITY, W_STATE, W_ZIP from Warehouse WHERE W_ID = %d;", C_W_ID
         );
         Row row8 = session.execute(q8).one();
-        //Warehouse’s address (W_STREET 1, W_STREET 2, W_CITY, W_STATE, W_ZIP)
         System.out.printf("Warehouse address: %s, %s, %s, %s, %s\n",
                 row8.getString("W_STREET_1"), row8.getString("W_STREET_2"),
                 row8.getString("W_CITY"), row8.getString("W_STATE"), row8.getString("W_ZIP"));
@@ -62,7 +58,6 @@ public class Transaction2 {
                         "D_ZIP from District WHERE D_W_ID = %d and D_ID = %d;", C_W_ID, C_D_ID
         );
         Row row9 = session.execute(q9).one();
-        //District’s address (D_STREET_1, D_STREET_2, D_CITY, D_STATE, D_ZIP)
         System.out.printf("District address: %s, %s, %s, %s, %s\n",
                 row9.getString("D_STREET_1"), row9.getString("D_STREET_2"),
                 row9.getString("D_CITY"), row9.getString("D_STATE"), row9.getString("D_ZIP"));
