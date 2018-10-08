@@ -75,11 +75,14 @@ public class ClientDriver {
                     int WID6 = Integer.valueOf(firstRow[1]);
                     int DID6 = Integer.valueOf(firstRow[2]);
                     int L6 = Integer.valueOf(firstRow[3]);
-                    new Transaction6(session, WID6, DID6, L6);
+                    new Transaction6(session, WID6, DID6, L6).execute();
                     break;
                 case 'T':
+                    // Transaction 7
+                    new Transaction7(session).execute();
                     break;
                 case 'R':
+                    // Transaction 8
                     break;
             }
         }
