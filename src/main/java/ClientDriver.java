@@ -55,7 +55,7 @@ public class ClientDriver {
                     // Transaction 3
                     int WID3 = Integer.valueOf(firstRow[1]);
                     int CARRIER_ID3 = Integer.valueOf(firstRow[2]);
-                    new Transaction3(session, WID3, CARRIER_ID3);
+                    new Transaction3(session, WID3, CARRIER_ID3).execute();
                     break;
                 case 'O':
                     int WID4 = Integer.valueOf(firstRow[1]);
