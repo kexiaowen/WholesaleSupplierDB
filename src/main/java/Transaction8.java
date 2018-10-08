@@ -34,29 +34,12 @@ public class Transaction8 {
         targetOrderLines = new ArrayList<ResultSet>();
     }
 
-    private boolean hasSatisfiedOrder(ResultSet order) {
-        Iterator<Row> orderIterator = order.iterator();
-        while (orderIterator.hasNext()) {
-            int oid = orderIterator.next().getInt("O_ID");
-            String orderLineQuery = String.format(
-                    "SELECT OL_I_ID FROM OrderLine WHERE OL_W_ID = %d AND OL_D_ID = %d AND OL_O_ID = %d;",
-                    W_ID, D_ID, oid
-            );
-            ResultSet orderLines = session.execute(orderLineQuery);
-            for (int i = 0; i < targetOrderLines.size(); i++) {
-                if (hasTwoSameOrderLine(orderLines, targetOrderLines.get(i)))
-                    return true;
-            }
-        }
-        return false;
-    }
-
     private boolean hasTwoSameOrderLine(ResultSet OL1, ResultSet OL2) {
         int counter = 0;
         Iterator<Row> ol1Iterator = OL1.iterator();
-        Iterator<Row> ol2Iterator = OL2.iterator();
         while (ol1Iterator.hasNext()) {
             int iid1 = ol1Iterator.next().getInt("OL_I_ID");
+            Iterator<Row> ol2Iterator = OL2.iterator();
             while (ol2Iterator.hasNext()) {
                 int iid2 = ol2Iterator.next().getInt("OL_I_ID");
                 if (iid1 == iid2) {
@@ -64,6 +47,23 @@ public class Transaction8 {
                     if (counter >= 2) return true;
                     else break;
                 }
+            }
+        }
+        return false;
+    }
+
+    private boolean hasSatisfiedOrder(int wid, int did, ResultSet order) {
+        Iterator<Row> orderIterator = order.iterator();
+        while (orderIterator.hasNext()) {
+            int oid = orderIterator.next().getInt("O_ID");
+            String orderLineQuery = String.format(
+                    "SELECT OL_I_ID FROM OrderLine WHERE OL_W_ID = %d AND OL_D_ID = %d AND OL_O_ID = %d;",
+                    wid, did, oid
+            );
+            ResultSet orderLines = session.execute(orderLineQuery);
+            for (int i = 0; i < targetOrderLines.size(); i++) {
+                if (hasTwoSameOrderLine(orderLines, targetOrderLines.get(i)))
+                    return true;
             }
         }
         return false;
@@ -82,7 +82,7 @@ public class Transaction8 {
                     wid, did, cid
             );
             ResultSet nextCustomerOrders = session.execute(nextCustomerOrderQuery);
-            if (hasSatisfiedOrder(nextCustomerOrders)) {
+            if (hasSatisfiedOrder(wid, did, nextCustomerOrders)) {
                 relatedCustomer.add(new Customer(wid, did, cid));
             }
         }
