@@ -16,6 +16,8 @@ public class ClientDriver {
         int totalXact = driver.readInput();
         long endingTime = System.currentTimeMillis();
         double totalTime = (endingTime - startTime) / 1000.0;
+        System.out.println("Total transaction: " + totalXact);
+        System.out.println("Running time: " + totalTime);
     }
 
     private int readInput() {

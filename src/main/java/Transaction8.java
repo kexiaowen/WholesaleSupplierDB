@@ -12,6 +12,10 @@ class Customer {
         this.cdid = cdid;
         this.cid = cid;
     }
+
+    public String toString() {
+        return String.format("%d, %d, %d", cwid, cdid, cid);
+    }
 }
 
 public class Transaction8 {
@@ -40,8 +44,8 @@ public class Transaction8 {
             );
             ResultSet orderLines = session.execute(orderLineQuery);
             for (int i = 0; i < targetOrderLines.size(); i++) {
-                if (hasTwoSameOrderLine(orderLines, targetOrderLines.get(i)));
-                return true;
+                if (hasTwoSameOrderLine(orderLines, targetOrderLines.get(i)))
+                    return true;
             }
         }
         return false;
@@ -65,11 +69,8 @@ public class Transaction8 {
         return false;
     }
 
-    private void findRelatedCustomers() {
-        String q2 = String.format(
-                "SELECT C_W_ID, C_D_ID, C_ID FROM Customer_By_WID WHERE C_W_ID != %d;", W_ID
-        );
-        Iterator<Row> customerIterator = session.execute(q2).iterator();
+    private void findRelatedCustomers(String query) {
+        Iterator<Row> customerIterator = session.execute(query).iterator();
 
         while (customerIterator.hasNext()) {
             Row nextCustomer = customerIterator.next();
@@ -87,7 +88,7 @@ public class Transaction8 {
         }
     }
 
-    private void findTargetOrderline() {
+    private void findTargetOrderLine() {
         String q1 = String.format(
                 "SELECT O_ID FROM Order_With_CID WHERE O_W_ID = %d AND O_D_ID = %d AND O_C_ID = %d;",
                 W_ID, D_ID, C_ID
@@ -107,14 +108,22 @@ public class Transaction8 {
     private void printResult() {
         System.out.printf("Target Customer: %d, %d, %d\n", W_ID, D_ID, C_ID);
         for (int i = 0; i < relatedCustomer.size(); i++) {
-            Customer customer = relatedCustomer.get(i);
-            System.out.printf("%d, %d, %d\n", customer.cwid, customer.cdid, customer.cid);
+            System.out.println(relatedCustomer.get(i));
         }
     }
 
     public void execute() {
-        findTargetOrderline();
-        findRelatedCustomers();
+        findTargetOrderLine();
+        String q2 = String.format(
+                "SELECT C_W_ID, C_D_ID, C_ID FROM Customer_By_WID WHERE C_W_ID < %d ALLOW FILTERING;",
+                W_ID
+        );
+        String q3 = String.format(
+                "SELECT C_W_ID, C_D_ID, C_ID FROM Customer_By_WID WHERE C_W_ID > %d ALLOW FILTERING;",
+                W_ID
+        );
+        findRelatedCustomers(q2);
+        findRelatedCustomers(q3);
         printResult();
     }
 }
