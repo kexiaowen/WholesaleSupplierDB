@@ -38,8 +38,6 @@ public class Transaction1 {
         Row row1 = session.execute(q1).one();
         int nextOID = row1.getInt("D_NEXT_O_ID");
 
-        // sout
-        //System.out.println("nextOID = " + nextOID);
         String q2 = String.format(
                 "UPDATE District SET D_NEXT_O_ID = %d WHERE D_W_ID = %d AND D_ID = %d;",
                 nextOID + 1, W_ID, D_ID
@@ -133,7 +131,6 @@ public class Transaction1 {
         double dTax = session.execute(q10).one().getDecimal("D_TAX").doubleValue();
         System.out.println("W_Tax: " + wTax + " D_Tax: " + dTax);
 
-        // TODO: find an efficient way to print entry date
         // #3
         String q11 = String.format("SELECT O_ENTRY_D FROM Orders " +
                 "Where O_W_ID = %d AND O_D_ID = %d AND O_ID = %d;",
