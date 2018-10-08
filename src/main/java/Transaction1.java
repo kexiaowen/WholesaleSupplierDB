@@ -133,9 +133,13 @@ public class Transaction1 {
         double dTax = session.execute(q10).one().getDecimal("D_TAX").doubleValue();
         System.out.println("W_Tax: " + wTax + " D_Tax: " + dTax);
 
-        // TODO: print entry date
+        // TODO: find an efficient way to print entry date
         // #3
-        System.out.println("O_ID: " + OID);
+        String q11 = String.format("SELECT O_ENTRY_D FROM Orders " +
+                "Where O_W_ID = %d AND O_D_ID = %d AND O_ID = %d",
+                W_ID, D_ID, OID);
+        String time = session.execute(q11).one().getTimestamp("O_ENTRY_D").toString();
+        System.out.println("Entry date: " + time + " O_ID: " + OID);
 
         // #4
         double totalAmount = rawAmount * (1 + wTax + dTax) * (1 - discount);
@@ -143,8 +147,8 @@ public class Transaction1 {
 
         // #5
         for (int i = 0; i < num_items; i++) {
-            System.out.printf("Item number: %d, Item name: %s, Supplier warehouse: %d, Quantity: %d" +
-                    "OL amount: %f, S_quantity: %d\n", item_number[i], itemName[i], supplier_warehouse[i],
+            System.out.printf("Item number: %d, Item name: %s, Supplier warehouse: %d, Quantity: %d, " +
+                    "OL_amount: %f, S_quantity: %d\n", item_number[i], itemName[i], supplier_warehouse[i],
                     quantity[i], itemPrice[i] * quantity[i], stockQuantity[i]);
         }
     }
