@@ -71,6 +71,10 @@ public class ClientDriver {
                 case 'T':
                     break;
                 case 'R':
+                    int WID8 = Integer.valueOf(firstRow[1]);
+                    int DID8 = Integer.valueOf(firstRow[2]);
+                    int CID8 = Integer.valueOf(firstRow[3]);
+                    new Transaction8(session, WID8, DID8, CID8).execute();
                     break;
             }
         }

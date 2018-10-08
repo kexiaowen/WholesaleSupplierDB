@@ -136,7 +136,7 @@ public class Transaction1 {
         // TODO: find an efficient way to print entry date
         // #3
         String q11 = String.format("SELECT O_ENTRY_D FROM Orders " +
-                "Where O_W_ID = %d AND O_D_ID = %d AND O_ID = %d",
+                "Where O_W_ID = %d AND O_D_ID = %d AND O_ID = %d;",
                 W_ID, D_ID, OID);
         String time = session.execute(q11).one().getTimestamp("O_ENTRY_D").toString();
         System.out.println("Entry date: " + time + " O_ID: " + OID);
