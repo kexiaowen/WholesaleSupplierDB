@@ -52,6 +52,10 @@ public class ClientDriver {
                     new Transaction2(session, WID2, DID2, CID2, payment).execute();
                     break;
                 case 'D':
+                    // Transaction 3
+                    int WID3 = Integer.valueOf(firstRow[1]);
+                    int CARRIER_ID3 = Integer.valueOf(firstRow[2]);
+                    new Transaction3(session, WID3, CARRIER_ID3);
                     break;
                 case 'O':
                     int WID4 = Integer.valueOf(firstRow[1]);
@@ -67,6 +71,11 @@ public class ClientDriver {
                     new Transaction5(session, WID5, DID5, threshold, L).execute();
                     break;
                 case 'I':
+                    // Transaction 6
+                    int WID6 = Integer.valueOf(firstRow[1]);
+                    int DID6 = Integer.valueOf(firstRow[2]);
+                    int L6 = Integer.valueOf(firstRow[3]);
+                    new Transaction6(session, WID6, DID6, L6);
                     break;
                 case 'T':
                     break;
