@@ -25,7 +25,7 @@ public class Transaction4 {
         Row row1 = session.execute(q1).one();
         System.out.printf("Name: %s %s %s. Balance: %f\n",
                 row1.getString("C_LAST"), row1.getString("C_MIDDLE"), row1.getString("C_FIRST"),
-                row1.getDouble("C_BALANCE"));
+                row1.getDecimal("C_BALANCE").doubleValue());
 
         String q2 = String.format(
                 "SELECT O_ID, O_ENTRY_D, O_CARRIER_ID FROM Order_With_CID " +
