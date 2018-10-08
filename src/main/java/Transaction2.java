@@ -43,9 +43,9 @@ public class Transaction2 {
                 row7.getString("C_FIRST"), row7.getString("C_MIDDLE"), row7.getString("C_LAST"),
                 row7.getString("C_STREET_1"), row7.getString("C_STREET_2"), row7.getString("C_CITY"),
                 row7.getString("C_STATE"), row7.getString("C_ZIP"),
-                row7.getString("C_PHONE"), row7.getString("C_SINCE"), row7.getString("C_CREDIT"),
-                row7.getDouble("C_CREDIT_LIM"), row7.getDouble("C_DISCOUNT"),
-                row7.getDouble("C_Balance"));
+                row7.getString("C_PHONE"), row7.getTimestamp("C_SINCE").toString(), row7.getString("C_CREDIT"),
+                row7.getDecimal("C_CREDIT_LIM").doubleValue(), row7.getDecimal("C_DISCOUNT").doubleValue(),
+                row7.getDecimal("C_Balance").doubleValue());
 
         String q8 = String.format(
                 "Select W_STREET_1, W_STREET_2, " +
@@ -59,7 +59,7 @@ public class Transaction2 {
 
         String q9 = String.format(
                 "Select D_STREET_1, D_STREET_2, D_CITY, D_STATE, " +
-                        "D_ZIP from District D_W_ID = %d and D_ID = %d;", C_W_ID, C_D_ID
+                        "D_ZIP from District WHERE D_W_ID = %d and D_ID = %d;", C_W_ID, C_D_ID
         );
         Row row9 = session.execute(q9).one();
         //District’s address (D_STREET_1, D_STREET_2, D_CITY, D_STATE, D_ZIP)
@@ -72,7 +72,7 @@ public class Transaction2 {
 
     private void updateCustomer() {
         String q5 = String.format(
-                "Select C_BALANCE, C_YTD_PAYMENT, C_PAYMENT_CNT from Customer"
+                "Select C_BALANCE, C_YTD_PAYMENT, C_PAYMENT_CNT from Customer "
                 + "Where C_W_ID = %d AND C_D_ID = %d AND C_ID = %d;",
                 C_W_ID, C_D_ID, C_ID
         );
@@ -81,7 +81,7 @@ public class Transaction2 {
         double ytd = row5.getFloat("C_YTD_PAYMENT") + payment;
         int cnt = row5.getInt("C_PAYMENT_CNT") + 1;
         String q6 = String.format(
-                "Update Customer set C_BALANCE = %f, C_PAYMENT_CNT = %f, C_ID = %d "
+                "Update Customer set C_BALANCE = %f, C_YTD_PAYMENT = %f, C_PAYMENT_CNT = %d "
                 + "Where C_W_ID = %d AND C_D_ID = %d AND C_ID = %d;",
                 balance, ytd, cnt, C_W_ID, C_D_ID, C_ID
         );
