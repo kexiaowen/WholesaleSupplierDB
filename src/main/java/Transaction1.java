@@ -156,7 +156,6 @@ public class Transaction1 {
     public void execute() {
         int nextOID = retrieveAndUpdateOID();
         insertNewOrder(nextOID);
-        // End of last meeting
         double rawAmount = insertOrderLinesAndComputePrice(nextOID);
         printResult(nextOID, rawAmount);
     }
