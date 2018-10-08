@@ -1,13 +1,9 @@
 import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
-import com.sun.xml.internal.bind.v2.TODO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.Iterator;
-
-// Havent tested on server, having some issues connecting to server
 
 public class Transaction6 {
 
@@ -29,14 +25,15 @@ public class Transaction6 {
         printResult();
         String q1 = String.format("SELECT D_NEXT_O_ID FROM District WHERE D_W_ID=%d AND D_ID=%d;", W_ID, D_ID);
         Row row1 = session.execute(q1).one();
-        int next_o_id = row1.getInt("NEXT_O_ID");
+        int next_o_id = row1.getInt("D_NEXT_O_ID");
 
         ArrayList<Integer> popular_items = new ArrayList<Integer>();
         ArrayList<String> popular_item_names = new ArrayList<String>();
 
-        for(int i = next_o_id-1; i >= next_o_id-L; i++) {
+        for(int i = next_o_id-1; i >= next_o_id-L; i--) {
             String q2 = String.format("SELECT O_ENTRY_D, O_C_ID FROM Orders WHERE O_W_ID=%d AND O_D_ID=%d AND O_ID=%d;", W_ID, D_ID, i);
             Row row2 = session.execute(q2).one();
+            if(row2 == null) {System.out.println("Null pointer exception");}
             System.out.printf("The Order number is %d and the entry date and number is %s\n", i, row2.getTimestamp("O_ENTRY_D").toString());
 
             // print name of customer
@@ -47,7 +44,6 @@ public class Transaction6 {
             );
 
             ArrayList<Row> OLs = new ArrayList<Row>();
-            // TODO: modify the attributes later to only select necessary attributes
             String q4 = String.format("SELECT * FROM OrderLine WHERE OL_W_ID=%d AND OL_D_ID=%d AND OL_O_ID=%d;", W_ID, D_ID, i);
 
             Iterator<Row> iterator = session.execute(q4).iterator();
@@ -66,19 +62,23 @@ public class Transaction6 {
                 int ol_quantity = row4.getDecimal("OL_QUANTITY").intValue();
                 if(ol_quantity > max) {
                     item_ids = new ArrayList<Integer>();
-                    item_ids.add(row4.getInt("OL_O_ID"));
+                    item_ids.add(row4.getInt("OL_I_ID"));
                     max = ol_quantity;
                 } else if(ol_quantity == max) {
-                    item_ids.add(row4.getInt("OL_O_ID"));
+                    item_ids.add(row4.getInt("OL_I_ID"));
                 }
             }
 
             // After the selection, item_ids contains the id of popular item for the current order
+            String item_name = "";
             for(int j = 0; j < item_ids.size(); j++) {
                 popular_items.add(item_ids.get(j));
                 String q5 = String.format("SELECT I_NAME FROM Item WHERE I_ID=%d;", item_ids.get(j));
                 Row row5 = session.execute(q5).one();
-                System.out.printf("Item name: %s\n Quantity ordered: %d\n", row5.getString("I_NAME"), max);
+                if(!item_name.equals(row5.getString("I_NAME"))) {
+                    System.out.printf("Item name: %s and Quantity ordered: %d\n", row5.getString("I_NAME"), max);
+                    item_name = row5.getString("I_NAME");
+                }
                 popular_item_names.add(row5.getString("I_NAME"));
             }
         }
@@ -86,7 +86,7 @@ public class Transaction6 {
         // calculate the additional information that will be printed later
         for(int i = 0; i < popular_items.size(); i++) {
             int count = 0;
-            for(int j = next_o_id-1; j >= next_o_id-L; j++) {
+            for(int j = next_o_id-1; j >= next_o_id-L; j--) {
                 String q6 = String.format("SELECT OL_I_ID FROM OrderLine_T6 WHERE OL_W_ID=%d AND OL_D_ID=%d AND OL_O_ID=%d AND OL_I_ID=%d;",
                         W_ID, D_ID, j, popular_items.get(i)
                 );
