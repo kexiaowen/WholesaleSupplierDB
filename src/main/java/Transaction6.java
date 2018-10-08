@@ -1,6 +1,5 @@
 import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
-import com.sun.xml.internal.bind.v2.TODO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
