@@ -1,6 +1,7 @@
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.Session;
 
+import java.sql.Timestamp;
 import java.util.Scanner;
 
 public class ClientDriver {
@@ -16,6 +17,7 @@ public class ClientDriver {
         int totalXact = driver.readInput();
         long endingTime = System.currentTimeMillis();
         double totalTime = (endingTime - startTime) / 1000.0;
+        System.err.printf("\n\n\n");
         System.err.println("Total transaction: " + totalXact);
         System.err.println("Running time: " + totalTime);
         System.err.println("Transaction throughput: " + totalXact / totalTime);
@@ -30,9 +32,11 @@ public class ClientDriver {
             totalXact++;
             String[] firstRow = sc.next().split(",");
             char type = firstRow[0].charAt(0);
+            Timestamp time = new Timestamp(System.currentTimeMillis());
             switch (type) {
                 // N, P, D, O, S, I, T, or R,
                 case 'N':
+                    System.out.println("T1: " + time);
                     int CID1 = Integer.valueOf(firstRow[1]);
                     int WID1 = Integer.valueOf(firstRow[2]);
                     int DID1 = Integer.valueOf(firstRow[3]);
@@ -50,6 +54,7 @@ public class ClientDriver {
                             item_number, supplier_warehouse, quantity).execute();
                     break;
                 case 'P':
+                    System.out.println("T2: " + time);
                     int WID2 = Integer.valueOf(firstRow[1]);
                     int DID2 = Integer.valueOf(firstRow[2]);
                     int CID2 = Integer.valueOf(firstRow[3]);
@@ -58,17 +63,20 @@ public class ClientDriver {
                     break;
                 case 'D':
                     // Transaction 3
+                    System.out.println("T3: " + time);
                     int WID3 = Integer.valueOf(firstRow[1]);
                     int CARRIER_ID3 = Integer.valueOf(firstRow[2]);
                     new Transaction3(session, WID3, CARRIER_ID3).execute();
                     break;
                 case 'O':
+                    System.out.println("T4: " + time);
                     int WID4 = Integer.valueOf(firstRow[1]);
                     int DID4 = Integer.valueOf(firstRow[2]);
                     int CID4 = Integer.valueOf(firstRow[3]);
                     new Transaction4(session, WID4, DID4, CID4).execute();
                     break;
                 case 'S':
+                    System.out.println("T5: " + time);
                     int WID5 = Integer.valueOf(firstRow[1]);
                     int DID5 = Integer.valueOf(firstRow[2]);
                     double threshold = Double.valueOf(firstRow[3]);
@@ -77,6 +85,7 @@ public class ClientDriver {
                     break;
                 case 'I':
                     // Transaction 6
+                    System.out.println("T6: " + time);
                     int WID6 = Integer.valueOf(firstRow[1]);
                     int DID6 = Integer.valueOf(firstRow[2]);
                     int L6 = Integer.valueOf(firstRow[3]);
@@ -84,9 +93,11 @@ public class ClientDriver {
                     break;
                 case 'T':
                     // Transaction 7
+                    System.out.println("T7: " + time);
                     new Transaction7(session).execute();
                     break;
                 case 'R':
+                    System.out.println("T8: " + time);
                     int WID8 = Integer.valueOf(firstRow[1]);
                     int DID8 = Integer.valueOf(firstRow[2]);
                     int CID8 = Integer.valueOf(firstRow[3]);

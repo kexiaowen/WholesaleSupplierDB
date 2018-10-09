@@ -126,16 +126,16 @@ public class Transaction8 {
 
     public void execute() {
         findTargetOrderLine();
-        String q2 = String.format(
-                "SELECT C_W_ID, C_D_ID, C_ID FROM Customer_By_WID WHERE C_W_ID < %d ALLOW FILTERING;",
-                W_ID
-        );
-        String q3 = String.format(
-                "SELECT C_W_ID, C_D_ID, C_ID FROM Customer_By_WID WHERE C_W_ID > %d ALLOW FILTERING;",
-                W_ID
-        );
-        findRelatedCustomers(q2);
-        findRelatedCustomers(q3);
+        String q2 = "SELECT MAX(W_ID) FROM Warehouse;";
+        int maxWID = session.execute(q2).one().getInt("SYSTEM.MAX(W_ID)");
+        for (int i = 1; i <= maxWID; i++) {
+            if (i == W_ID) continue;
+            String q = String.format(
+                    "SELECT C_W_ID, C_D_ID, C_ID FROM Customer_By_WID WHERE C_W_ID = %d;", i
+            );
+            findRelatedCustomers(q);
+        }
+
         printResult();
     }
 }

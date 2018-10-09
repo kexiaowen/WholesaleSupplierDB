@@ -46,11 +46,17 @@ public class Transaction4 {
         Iterator<Row> iterator3 = session.execute(q3).iterator();
         while (iterator3.hasNext()) {
             Row row = iterator3.next();
+            double olAmount = 0, olQuantity = 0;
+            if(!row.isNull("OL_QUANTITY")) {
+                olQuantity = row.getDecimal("OL_QUANTITY").doubleValue();
+            }
+            if(!row.isNull("OL_AMOUNT")) {
+                olAmount = row.getDecimal("OL_AMOUNT").doubleValue();
+            }
             System.out.printf("OL_I_ID: %d, OL_SUPPLY_W_ID: %d, OL_QUANTITY: %f," +
                     " OL_AMOUNT: %f, OL_DELIVERY_D: %s\n",
                     row.getInt("OL_I_ID"), row.getInt("OL_SUPPLY_W_ID"),
-                    row.getDecimal("OL_QUANTITY").doubleValue(),
-                    row.getDecimal("OL_AMOUNT").doubleValue(),
+                    olQuantity, olAmount,
                     row.getTimestamp("OL_DELIVERY_D").toString());
         }
 

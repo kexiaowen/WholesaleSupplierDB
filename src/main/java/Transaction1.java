@@ -2,6 +2,8 @@ import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
 
+import java.sql.Timestamp;
+
 public class Transaction1 {
     private Session session;
     private int W_ID;
@@ -14,6 +16,7 @@ public class Transaction1 {
     private String[] itemName;
     private double[] itemPrice;
     private int[] stockQuantity;
+    private Timestamp timestamp;
 
     public Transaction1(Session session, int W_ID, int D_ID, int C_ID, int num_items,
                         int[] item_number, int[] supplier_warehouse, int[] quantity) {
@@ -55,10 +58,11 @@ public class Transaction1 {
             }
         }
 
+        timestamp = new Timestamp(System.currentTimeMillis());
         String q3 = String.format(
                 "INSERT INTO Orders (O_W_ID, O_D_ID, O_ID, O_C_ID, O_ENTRY_D, O_CARRIER_ID, O_OL_CNT, O_ALL_LOCAL) "
-                        + "VALUES (%d, %d, %d, %d, %s, %d, %d, %d);",
-                W_ID, D_ID, nextOID, C_ID, "toTimeStamp(now())", -1, num_items, all_local
+                        + "VALUES (%d, %d, %d, %d, '%s', %d, %d, %d);",
+                W_ID, D_ID, nextOID, C_ID, timestamp.toString(), -1, num_items, all_local
         );
         session.execute(q3);
     }
@@ -132,11 +136,7 @@ public class Transaction1 {
         System.out.println("W_Tax: " + wTax + " D_Tax: " + dTax);
 
         // #3
-        String q11 = String.format("SELECT O_ENTRY_D FROM Orders " +
-                "Where O_W_ID = %d AND O_D_ID = %d AND O_ID = %d;",
-                W_ID, D_ID, OID);
-        String time = session.execute(q11).one().getTimestamp("O_ENTRY_D").toString();
-        System.out.println("Entry date: " + time + " O_ID: " + OID);
+        System.out.println("Entry date: " + timestamp.toString() + " O_ID: " + OID);
 
         // #4
         double totalAmount = rawAmount * (1 + wTax + dTax) * (1 - discount);
