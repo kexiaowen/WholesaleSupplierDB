@@ -16,9 +16,11 @@ public class ClientDriver {
         int totalXact = driver.readInput();
         long endingTime = System.currentTimeMillis();
         double totalTime = (endingTime - startTime) / 1000.0;
-        System.out.println("Total transaction: " + totalXact);
-        System.out.println("Running time: " + totalTime);
-        System.out.println("Transaction throughput: " + totalXact / totalTime);
+        System.err.println("Total transaction: " + totalXact);
+        System.err.println("Running time: " + totalTime);
+        System.err.println("Transaction throughput: " + totalXact / totalTime);
+
+        driver.printFinalState();
     }
 
     private int readInput() {
@@ -93,6 +95,10 @@ public class ClientDriver {
             }
         }
         return totalXact;
+    }
+
+    private void printFinalState() {
+        new FinalState(session).execute();
     }
 
     private void connect(String ip) {

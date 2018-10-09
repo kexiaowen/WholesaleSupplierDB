@@ -1,0 +1,60 @@
+import com.datastax.driver.core.Row;
+import com.datastax.driver.core.Session;
+
+public class FinalState {
+
+    private Session session;
+    public FinalState(Session session) {
+        this.session = session;
+    }
+
+    public void execute() {
+        System.out.printf("\n\n\nFinal State: \n");
+
+        String q1 = "SELECT SUM(W_YTD) FROM Warehouse;";
+        double sumWYTD = session.execute(q1).one().getDecimal("SYSTEM.SUM(W_YTD)")
+                .doubleValue();
+        System.out.println("Sum of Warehouse YTD: " + sumWYTD);
+
+        String q2 = "SELECT SUM(D_YTD), SUM(D_NEXT_O_ID) FROM District;";
+        Row row2 = session.execute(q2).one();
+        double sumDYTD = row2.getDecimal("SYSTEM.SUM(D_YTD)").doubleValue();
+        int sumDNOID = row2.getInt("SYSTEM.SUM(D_NEXT_O_ID)");
+        System.out.printf("Sum of District YTD: %f, Sum of District next O_ID: %d\n",
+                sumDYTD, sumDNOID);
+
+        String q3 = "SELECT SUM(C_BALANCE), SUM(C_YTD_PAYMENT), SUM(C_PAYMENT_CNT)," +
+                " SUM(C_DELIVERY_CNT) FROM CUSTOMER;";
+        Row row3 = session.execute(q3).one();
+        double sumCBalance = row3.getDecimal("SYSTEM.SUM(C_BALANCE)").doubleValue();
+        double sumCYTD = row3.getDecimal("SYSTEM.SUM(C_YTD_PAYMENT)").doubleValue();
+        int sumCPaymentCNT = row3.getInt("SYSTEM.SUM(C_PAYMENT_CNT)");
+        int sumCDeliveryCNT = row3.getInt("SYSTEM.SUM(C_DELIVERY_CNT)");
+        System.out.printf("Sum of Balance: %f, Sum of YTD payment: %f, " +
+                "Sum of payment CNT: %d, Sum of Delivery CNT: %d\n",
+                sumCBalance, sumCYTD, sumCPaymentCNT, sumCDeliveryCNT);
+
+        String q4 = "SELECT MAX(O_ID), SUM(O_OL_CNT) FROM Orders";
+        Row row4 = session.execute(q4).one();
+        int maxOId = row4.getInt("SYSTEM.MAX(O_ID)");
+        double sumOOLCNT = row4.getDecimal("SYSTEM.SUM(O_OL_CNT)").doubleValue();
+        System.out.printf("Max O_ID: %d, Sum Order line count: %f\n", maxOId, sumOOLCNT);
+
+        String q5 = "SELECT SUM(OL_AMOUNT), SUM(OL_QUANTITY) FROM OrderLine;";
+        Row row5 = session.execute(q5).one();
+        double sumOLAmt = row5.getDecimal("SYSTEM.SUM(OL_AMOUNT)").doubleValue();
+        double sumOLQNT = row5.getDecimal("SYSTEM.SUM(OL_QUANTITY)").doubleValue();
+        System.out.printf("Sum of Order line amount: %f, Sum of Order line quantity: %f\n",
+                sumOLAmt, sumOLQNT);
+
+        String q6 = "SELECT SUM(S_QUANTITY), SUM(S_YTD), SUM(S_ORDER_CNT), SUM(S_REMOTE_CNT) FROM Stock;";
+        Row row6 = session.execute(q6).one();
+        double sumSQNT = row6.getDecimal("SYSTEM.SUM(S_QUANTITY)").doubleValue();
+        double sumSYTD = row6.getDecimal("SYSTEM.SUM(S_YTD)").doubleValue();
+        int sumSOCNT = row6.getInt("SYSTEM.SUM(S_ORDER_CNT)");
+        int sumSRmtCNT = row6.getInt("SYSTEM.SUM(S_REMOTE_CNT)");
+        System.out.printf("Sum of stock quantity: %f, Sum of Stock YTD: %f," +
+                " Sum of stock order count: %d, Sum of stock remote order count: %d\n",
+                sumSQNT, sumSYTD, sumSOCNT, sumSRmtCNT);
+    }
+}
