@@ -9,6 +9,11 @@ CS4224 Distributed Databases Project - Team 1
             > wget http://www-us.apache.org/dist/cassandra/3.11.3/apache-cassandra-3.11.3-bin.tar.gz
 
     2. Configure Cassandra by editing `/temp/apache-cassandra-3.11.3/conf/cassandra.yaml` for all nodes in the cluster. Run `hostname -i` to find out the IP address of the node. Set **listen address** as the IP address of the node. Choose one node in the cluster to be the seed node. Set the **seed** for all nodes in the cluster as the IP address of the seed node.
+    
+    For examples, 
+    ![seed](https://github.com/kexiaowen/WholesaleSupplierDB/blob/master/Images/seeds.png)
+    
+    ![listen_address](https://github.com/kexiaowen/WholesaleSupplierDB/blob/master/Images/listen_address.png)
 
     3. On every node in the cluster, starting from the seed node, start Cassandra by invoking the command below:
     
@@ -17,6 +22,9 @@ CS4224 Distributed Databases Project - Team 1
     4. Verify that Cassandra is running on all nodes in the cluster by invoking the following command:
     
             > /temp/apache-cassandra-3.11.3/bin/nodetool status
+            
+       You should be able to see the following:
+       ![nodetool_status](https://github.com/kexiaowen/WholesaleSupplierDB/blob/master/Images/verifyNodeStatus.png)
 
 
 2. Installing Maven for Building Source Code
@@ -42,7 +50,7 @@ CS4224 Distributed Databases Project - Team 1
     3. The jar file built is found in `~/WholesaleSupplierDB/target`
 
 4. Loading Data into Cassandra
-    1. Place project data files at directory `~/4224-project-files`
+    1. Place project data files at directory `~/4224-project-files` so that data files are found in `~/4224-project-files/data-files` and transaction files are found in `~/4224-project-files/xact-files`.
     2. Execute shell script `WholesaleSupplier/loadDataAndCreateTables.sh` by running the following commands:
     
             > cd WholesaleSupplierDB
