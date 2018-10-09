@@ -59,12 +59,8 @@ public class Transaction6 {
             // compare all the order lines within one order to find out the most popular items
             for(int j = 0; j < OLs.size(); j++) {
                 Row row4 = OLs.get(j);
-                int ol_quantity = 0;
-                if(row4.isNull("OL_QUANTITY")) {
-                    ol_quantity = 0;
-                } else {
-                    ol_quantity = row4.getDecimal("OL_QUANTITY").intValue();
-                }
+                int ol_quantity = row4.getDecimal("OL_QUANTITY").intValue();
+
                 if(ol_quantity > max) {
                     item_ids = new ArrayList<Integer>();
                     item_ids.add(row4.getInt("OL_I_ID"));
