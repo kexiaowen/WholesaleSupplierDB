@@ -30,9 +30,6 @@ public class Transaction3 {
     public void execute() {
         retrieveAndUpdateOldestUndeliveredOrder();
         updateOrderline();
-        //        updateCustomer();
-
-        // For this transaction, it does not need to print results
     }
 
     private void retrieveAndUpdateOldestUndeliveredOrder() {
@@ -56,26 +53,32 @@ public class Transaction3 {
 
     private void updateOrderline() {
         for(int i = 1; i <= 10; i++) {
-            for(int j = 1; j <= 20; j++) {
-                String q3 = String.format("UPDATE OrderLine SET OL_DELIVERY_D = toTimestamp(now()) " +
+            String q3 = String.format("SELECT O_OL_CNT FROM Orders WHERE O_W_ID=%d AND O_D_ID=%d AND O_ID=%d;",
+                    W_ID, i, O_IDs[i]
+            );
+            Row count_row = session.execute(q3).one();
+            int num_items = count_row.getDecimal("O_OL_CNT").intValue();
+
+            for(int j = 1; j <= num_items; j++) {
+                String q4 = String.format("UPDATE OrderLine SET OL_DELIVERY_D = toTimestamp(now()) " +
                                 "WHERE OL_W_ID = %d AND OL_D_ID = %d AND OL_O_ID = %d AND OL_NUMBER=%d;",
                         W_ID, i, O_IDs[i], j
                 );
 
-                session.execute(q3);
+                session.execute(q4);
             }
-            String q4 = String.format("SELECT OL_AMOUNT FROM OrderLine " +
+            String q5 = String.format("SELECT OL_AMOUNT FROM OrderLine " +
                             "WHERE OL_W_ID = %d AND OL_D_ID = %d AND OL_O_ID = %d;",
                     W_ID, i, O_IDs[i]
             );
-            Iterator<Row> it = session.execute(q4).iterator();
+            Iterator<Row> it = session.execute(q5).iterator();
 
             double totalAmount = 0;
             while(it.hasNext()) {
                 Row row = it.next();
-                if(!row.isNull("OL_AMOUNT")) {
-                    totalAmount += row.getDecimal("OL_AMOUNT").doubleValue();
-                }
+//                if(!row.isNull("OL_AMOUNT")) {
+                totalAmount += row.getDecimal("OL_AMOUNT").doubleValue();
+//                }
             }
 
             updateCustomer(i, totalAmount);
@@ -83,20 +86,20 @@ public class Transaction3 {
     }
 
     private void updateCustomer(int districtIndex, double totalAmount) {
-        String q5 = String.format("SELECT C_BALANCE, C_DELIVERY_CNT FROM Customer " +
+        String q6 = String.format("SELECT C_BALANCE, C_DELIVERY_CNT FROM Customer " +
                         "WHERE C_W_ID = %d AND C_D_ID = %d AND C_ID = %d;",
                 W_ID, districtIndex, C_IDs[districtIndex]
         );
 
-        Row row = session.execute(q5).one();
+        Row row = session.execute(q6).one();
         double new_balance = row.getDecimal("C_BALANCE").doubleValue() + totalAmount;
         int new_delivery_cnt = row.getInt("C_DELIVERY_CNT") + 1;
 
-        String q6 = String.format("UPDATE Customer SET C_BALANCE = %f, C_DELIVERY_CNT = %d " +
+        String q7 = String.format("UPDATE Customer SET C_BALANCE = %f, C_DELIVERY_CNT = %d " +
                         "WHERE C_W_ID = %d AND C_D_ID = %d AND C_ID = %d;",
                 new_balance, new_delivery_cnt, W_ID, districtIndex, C_IDs[districtIndex]
         );
 
-        session.execute(q6);
+        session.execute(q7);
     }
 }
