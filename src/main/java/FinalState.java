@@ -42,11 +42,13 @@ public class FinalState {
 
         double sumOLAmt = 0, sumOLQNT = 0;
         for (int i = 1; i < 11; i++) {
-            String q5 = String.format("SELECT SUM(OL_AMOUNT), SUM(OL_QUANTITY) FROM OrderLine_By_WID" +
-                            " Where OL_W_ID = %d;", i);
-            Row row5 = session.execute(q5).one();
-            sumOLAmt += row5.getDecimal("SYSTEM.SUM(OL_AMOUNT)").doubleValue();
-            sumOLQNT += row5.getDecimal("SYSTEM.SUM(OL_QUANTITY)").doubleValue();
+            for (int j = 1; j < 11; j++) {
+                String q5 = String.format("SELECT SUM(OL_AMOUNT), SUM(OL_QUANTITY) FROM OrderLine_By_WDID" +
+                        " Where OL_W_ID = %d AND OL_D_ID = %d;", i, j);
+                Row row5 = session.execute(q5).one();
+                sumOLAmt += row5.getDecimal("SYSTEM.SUM(OL_AMOUNT)").doubleValue();
+                sumOLQNT += row5.getDecimal("SYSTEM.SUM(OL_QUANTITY)").doubleValue();
+            }
         }
         System.out.printf("Sum of Order line amount: %f, Sum of Order line quantity: %f\n",
                 sumOLAmt, sumOLQNT);

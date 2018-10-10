@@ -22,7 +22,7 @@ public class ClientDriver {
         System.err.println("Running time: " + totalTime);
         System.err.println("Transaction throughput: " + totalXact / totalTime);
 
-        driver.printFinalState();
+        //driver.printFinalState();
     }
 
     private int readInput() {
