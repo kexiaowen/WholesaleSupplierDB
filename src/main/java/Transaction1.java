@@ -71,6 +71,10 @@ public class Transaction1 {
         double total_amount = 0;
 
         for (int i = 0; i < num_items; i++) {
+            if (item_number[i] < 1 || item_number[i] > 100000
+                    || supplier_warehouse[i] < 1 || supplier_warehouse[i] > 10) {
+                continue;
+            }
             String q4 = String.format(
                     "SELECT * FROM Stock WHERE S_W_ID = %d AND S_I_ID = %d;",
                     supplier_warehouse[i], item_number[i]);
