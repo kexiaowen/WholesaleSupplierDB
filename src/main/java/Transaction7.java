@@ -52,7 +52,7 @@ public class Transaction7 {
                     "FROM Customer " +
                     "WHERE C_W_ID = %d " +
                     "ALLOW FILTERING;", i);
-            logger.info(q1);
+            // logger.info(q1);
             Iterator<Row> iter = session.execute(q1).iterator();
             List<Customer> topCustomersWarehouse = new ArrayList<Customer>();
             while (iter.hasNext()) {
