@@ -67,4 +67,8 @@ CS4224 Distributed Databases Project - Team 1
 
             > ~/apache-maven-3.5.4/bin/mvn exec:java [ip_address] [consistency_level] < [input_file_name]
             
-            * Note: The consistency must either be ONE or QUORUM
+            ---
+            Note:
+            * The consistency must either be ONE or QUORUM
+            * Through our test, the node address (192.168.48.219) does not work, but localhost (127.0.0.1) works.
+            
