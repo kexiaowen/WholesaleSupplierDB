@@ -70,4 +70,6 @@ CS4224 Distributed Databases Project - Team 1
             Note:
             * The consistency must either be ONE or QUORUM
             * Through our test, the node address (192.168.48.219) does not work, but localhost (127.0.0.1) works.
+
+6. After finish running, press `Ctrl+C` to stop the process
             
