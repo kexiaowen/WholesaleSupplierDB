@@ -55,7 +55,6 @@ public class Transaction5 {
         q3Builder.deleteCharAt(q3Builder.length() - 2);
         q3Builder.append(");");
         String q3 = q3Builder.toString();
-        System.out.println(q3);
 
         Iterator<Row> iterator3 = session.execute(q3).iterator();
         int result = 0;

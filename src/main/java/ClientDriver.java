@@ -15,7 +15,7 @@ public class ClientDriver {
     public static void main(String[] args) {
         ClientDriver driver = new ClientDriver();
         if (!driver.checkArgument(args)) { return; }
-        String ip =  args[0]; // "127.0.0.1";
+        String ip = args[0]; // "127.0.0.1";
         driver.connect(ip);
         long startTime = System.currentTimeMillis();
         int totalXact = driver.readInput();
@@ -32,7 +32,7 @@ public class ClientDriver {
     private boolean checkArgument(String[] args) {
         if (args.length < 2) {
             System.out.println("Wrong argument input, correct format is " +
-                    "~/apache-maven-3.5.4/bin/mvn exec:java [ip_address] [consistency_level] < [input_file_name]");
+                    "~/apache-maven-3.5.4/bin/mvn exec:java -Dexec.args=\"[ip_address] [consistency_level] < [input_file_name]\"");
             return false;
         }
         String consistency = args[1];
