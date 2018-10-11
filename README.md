@@ -65,4 +65,6 @@ CS4224 Distributed Databases Project - Team 1
 
             > cd WholesaleSupplierDB
 
-            > ~/apache-maven-3.5.4/bin/mvn exec:java < input.txt
+            > ~/apache-maven-3.5.4/bin/mvn exec:java [ip_address] [consistency_level] < [input_file_name]
+            
+            * Note: The consistency must either be ONE or QUORUM
