@@ -72,5 +72,5 @@ CS4224 Distributed Databases Project - Team 1
             * No spacing between `-Dexec.args` and `=`, but the spacing is required between 2 arguments
             * Through our test, the node address (192.168.48.219) does not work, but localhost (127.0.0.1) works.
 
-6. After finish running, press `Ctrl+C` to stop the process
+6. After finishing running, press `Ctrl+C` to stop the process
             
