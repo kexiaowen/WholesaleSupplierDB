@@ -65,6 +65,12 @@ CS4224 Distributed Databases Project - Team 1
 
             > cd WholesaleSupplierDB
 
-            > ~/apache-maven-3.5.4/bin/mvn exec:java [ip_address] [consistency_level] < [input_file_name]
+            > ~/apache-maven-3.5.4/bin/mvn exec:java -Dexec.args="[ip_address] [consistency_level]" < [input_file_name]
             
-            * Note: The consistency must either be ONE or QUORUM
+            Note:
+            * The consistency must either be ONE or QUORUM
+            * No spacing between `-Dexec.args` and `=`, but the spacing is required between 2 arguments
+            * Through our test, the node address (192.168.48.219) does not work, but localhost (127.0.0.1) works.
+
+6. After finishing running, press `Ctrl+C` to stop the process
+            
