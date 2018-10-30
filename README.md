@@ -24,7 +24,7 @@ CS4224 Distributed Databases Project - Team 1
             > /temp/apache-cassandra-3.11.3/bin/nodetool status
 
        You should be able to see the following:
-       ![nodetool_status](https://github.com/kexiaowen/WholesaleSupplierDB/blob/master/Images/verifyNodeStatus.png)
+       ![nodetool_status](https://github.com/kexiaowen/WholesaleSupplierDB/blob/master/Images/verifyNodeStatus.jpg)
 
 
 2. Installing Maven for Building Source Code
